@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+	function getdim()
+	{
+		var w=getParameterByName('w');
+		var h=getParameterByName('h');
+		return 'width:100px; height:100px;'
+
+	}
+      function initialize() 
+	{
+	 if(getParameterByName('x')!="" && getParameterByName('y')!="")
+	 { 	
+	  var latlng = new google.maps.LatLng(getParameterByName('x'),getParameterByName('y'));
+	 }
+	 var latlng_exif = new google.maps.LatLng(getParameterByName('x_ex'),getParameterByName('y_ex'));
+	 var options = { zoom: 18,
+                   center: latlng_exif               
+                 }; 
+	 var map = new google.maps.Map(document.getElementById('map_canvas'), options);	
+	 if(getParameterByName('x')!="" && getParameterByName('y')!="")
+	 { 
+	 	var myMarker = new google.maps.Marker({ position: latlng, map: map, title:'tu secondo me sei qui!'});
+ 	 }
+	 var myMarker_exif = new google.maps.Marker({ position: latlng_exif, map: map, title:'secondo il tuo gps invece sei qui!', icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
+ document.getElementById("map_canvas").style.width=getParameterByName('w')+'px';
+ document.getElementById("map_canvas").style.height=getParameterByName('h')+'px';
+	}
+     </script>
+  </head>
+
+  <body onload="initialize()" style="margin:0; padding:0">
+	<div id='map_canvas' style='width:1px; height:1px;'></div>
+
+  </body>
+</html>
+
