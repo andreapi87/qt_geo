@@ -116,9 +116,11 @@ void Dialogo::on_carica_clicked()
 
     ExifGPS exifgps=readGPS(nomeimmagine.toStdString());
     lat_exif=std::to_string(exifgps.lat);
-    lat_exif.replace(lat_exif.find(","),1,".");
+    if(lat_exif.find(",")!=lat_exif.npos)
+        lat_exif.replace(lat_exif.find(","),1,".");
     lon_exif=std::to_string(exifgps.lon);
-    lon_exif.replace(lon_exif.find(","),1,".");
+    if(lon_exif.find(",")!=lon_exif.npos)
+        lon_exif.replace(lon_exif.find(","),1,".");
     std::cout<<lat_exif<<" "<<lon_exif<<endl;
     setmappa("","",lat_exif,lon_exif);
 }
