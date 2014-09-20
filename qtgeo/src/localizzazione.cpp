@@ -114,6 +114,9 @@ std::string localizzazione::calcola_sift(std::string path_img_jpg)
     comando=EXEC_FEAT+" "+PATH_TMP+"/"+basename+".pgm --peak-thresh=3.4 -o "+PATH_TMP+"/"+basename+".key >> out.txt 2>errori.txt ;";
     system(comando.c_str());
 
+    //SPOSTO LA JPG IN TEMP
+    comando="cp "+path_img_jpg+" "+PATH_TMP+"/";
+    system(comando.c_str());
 
     return PATH_TMP+"/"+basename+".key";
 
@@ -143,7 +146,7 @@ std::vector<std::string> localizzazione::acg_localizer(std::string path_img_sift
 
     //ACG2CAMERA
     comando=EXEC_SATTLER2CAMERA+" "+FILE_LOG_SATTLER+" "+FILE_LIST_KEY+" "+PATH_TMP;
-    system(comando.c_str());
+    //system(comando.c_str());
 
     //CAMERA2LATLONG
     comando=EXEC_CAMERA2LATLONG+" "+FILE_CAMERA+" "+PATH_MEDIA_CAM_CENTER+" > "+FILE_COORD_FINAL;
