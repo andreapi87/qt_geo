@@ -116,13 +116,14 @@ void Dialogo::on_carica_clicked()
 
     ExifGPS exifgps=readGPS(nomeimmagine.toStdString());
     lat_exif=std::to_string(exifgps.lat);
-    if(lat_exif.find(",")!=lat_exif.npos)
-        lat_exif.replace(lat_exif.find(","),1,".");
+    /*if(lat_exif.find(",")!=lat_exif.npos)
+        lat_exif.replace(lat_exif.find(","),1,".");*/
     lon_exif=std::to_string(exifgps.lon);
-    if(lon_exif.find(",")!=lon_exif.npos)
+    std::cout<<"SCREENSHOTTA QUESTO "<<lat_exif<<" "<<lon_exif<<"\n ";
+    /*if(lon_exif.find(",")!=lon_exif.npos)
         lon_exif.replace(lon_exif.find(","),1,".");
     std::cout<<lat_exif<<" "<<lon_exif<<endl;
-    setmappa("","",lat_exif,lon_exif);
+    setmappa("","",lat_exif,lon_exif);*/
 }
 
 
