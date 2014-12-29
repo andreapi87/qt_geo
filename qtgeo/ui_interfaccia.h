@@ -23,6 +23,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
@@ -53,15 +54,22 @@ public:
     QLabel *label_3;
     QPushButton *bin_tasto;
     QPushButton *cluster_tasto;
-    QLabel *label_2;
-    QLabel *label;
     QLineEdit *out_input;
+    QLabel *label_2;
     QLineEdit *n_centroidi_input;
+    QLabel *label;
     QLabel *label_9;
+    QLineEdit *tmp_input;
+    QLabel *label_5;
     QHBoxLayout *horizontalLayout_4;
     QGraphicsView *mappa;
     QLabel *distanza_label;
     QLabel *label_10;
+    QRadioButton *tipo_sift_lowe;
+    QRadioButton *tipo_sift_siftgpu;
+    QLineEdit *parametri_input;
+    QLabel *label_6;
+    QButtonGroup *tipo_sift;
 
     void setupUi(QDialog *Dialogo)
     {
@@ -140,72 +148,82 @@ public:
         bin_input = new QLineEdit(file_groupbox);
         bin_input->setObjectName(QStringLiteral("bin_input"));
 
-        layout_file->addWidget(bin_input, 2, 1, 1, 1);
+        layout_file->addWidget(bin_input, 3, 1, 1, 1);
 
         center_input = new QLineEdit(file_groupbox);
         center_input->setObjectName(QStringLiteral("center_input"));
 
-        layout_file->addWidget(center_input, 4, 1, 1, 1);
+        layout_file->addWidget(center_input, 5, 1, 1, 1);
 
         center_tasto = new QPushButton(file_groupbox);
         center_tasto->setObjectName(QStringLiteral("center_tasto"));
 
-        layout_file->addWidget(center_tasto, 4, 2, 1, 1);
+        layout_file->addWidget(center_tasto, 5, 2, 1, 1);
 
         out_tasto = new QPushButton(file_groupbox);
         out_tasto->setObjectName(QStringLiteral("out_tasto"));
 
-        layout_file->addWidget(out_tasto, 1, 2, 1, 1);
+        layout_file->addWidget(out_tasto, 2, 2, 1, 1);
 
         label_4 = new QLabel(file_groupbox);
         label_4->setObjectName(QStringLiteral("label_4"));
 
-        layout_file->addWidget(label_4, 4, 0, 1, 1);
+        layout_file->addWidget(label_4, 5, 0, 1, 1);
 
         cluster_input = new QLineEdit(file_groupbox);
         cluster_input->setObjectName(QStringLiteral("cluster_input"));
 
-        layout_file->addWidget(cluster_input, 3, 1, 1, 1);
+        layout_file->addWidget(cluster_input, 4, 1, 1, 1);
 
         label_3 = new QLabel(file_groupbox);
         label_3->setObjectName(QStringLiteral("label_3"));
 
-        layout_file->addWidget(label_3, 3, 0, 1, 1);
+        layout_file->addWidget(label_3, 4, 0, 1, 1);
 
         bin_tasto = new QPushButton(file_groupbox);
         bin_tasto->setObjectName(QStringLiteral("bin_tasto"));
 
-        layout_file->addWidget(bin_tasto, 2, 2, 1, 1);
+        layout_file->addWidget(bin_tasto, 3, 2, 1, 1);
 
         cluster_tasto = new QPushButton(file_groupbox);
         cluster_tasto->setObjectName(QStringLiteral("cluster_tasto"));
 
-        layout_file->addWidget(cluster_tasto, 3, 2, 1, 1);
-
-        label_2 = new QLabel(file_groupbox);
-        label_2->setObjectName(QStringLiteral("label_2"));
-
-        layout_file->addWidget(label_2, 2, 0, 1, 1);
-
-        label = new QLabel(file_groupbox);
-        label->setObjectName(QStringLiteral("label"));
-
-        layout_file->addWidget(label, 1, 0, 1, 1);
+        layout_file->addWidget(cluster_tasto, 4, 2, 1, 1);
 
         out_input = new QLineEdit(file_groupbox);
         out_input->setObjectName(QStringLiteral("out_input"));
 
-        layout_file->addWidget(out_input, 1, 1, 1, 1);
+        layout_file->addWidget(out_input, 2, 1, 1, 1);
+
+        label_2 = new QLabel(file_groupbox);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        layout_file->addWidget(label_2, 3, 0, 1, 1);
 
         n_centroidi_input = new QLineEdit(file_groupbox);
         n_centroidi_input->setObjectName(QStringLiteral("n_centroidi_input"));
 
-        layout_file->addWidget(n_centroidi_input, 5, 1, 1, 1);
+        layout_file->addWidget(n_centroidi_input, 6, 1, 1, 1);
+
+        label = new QLabel(file_groupbox);
+        label->setObjectName(QStringLiteral("label"));
+
+        layout_file->addWidget(label, 2, 0, 1, 1);
 
         label_9 = new QLabel(file_groupbox);
         label_9->setObjectName(QStringLiteral("label_9"));
 
-        layout_file->addWidget(label_9, 5, 0, 1, 1);
+        layout_file->addWidget(label_9, 6, 0, 1, 1);
+
+        tmp_input = new QLineEdit(file_groupbox);
+        tmp_input->setObjectName(QStringLiteral("tmp_input"));
+
+        layout_file->addWidget(tmp_input, 1, 1, 1, 1);
+
+        label_5 = new QLabel(file_groupbox);
+        label_5->setObjectName(QStringLiteral("label_5"));
+
+        layout_file->addWidget(label_5, 1, 0, 1, 1);
 
 
         formLayout->setLayout(0, QFormLayout::LabelRole, layout_file);
@@ -215,8 +233,6 @@ public:
 
         formLayout->setLayout(0, QFormLayout::FieldRole, horizontalLayout_4);
 
-        horizontalLayoutWidget_3->raise();
-        horizontalLayoutWidget_3->raise();
         mappa = new QGraphicsView(Dialogo);
         mappa->setObjectName(QStringLiteral("mappa"));
         mappa->setGeometry(QRect(271, 9, 256, 192));
@@ -226,14 +242,23 @@ public:
         label_10 = new QLabel(Dialogo);
         label_10->setObjectName(QStringLiteral("label_10"));
         label_10->setGeometry(QRect(350, 230, 67, 17));
-        out_input->raise();
-        horizontalLayoutWidget_2->raise();
-        horizontalLayoutWidget_3->raise();
-        immagine->raise();
-        file_groupbox->raise();
-        mappa->raise();
-        distanza_label->raise();
-        label_10->raise();
+        tipo_sift_lowe = new QRadioButton(Dialogo);
+        tipo_sift = new QButtonGroup(Dialogo);
+        tipo_sift->setObjectName(QStringLiteral("tipo_sift"));
+        tipo_sift->addButton(tipo_sift_lowe);
+        tipo_sift_lowe->setObjectName(QStringLiteral("tipo_sift_lowe"));
+        tipo_sift_lowe->setGeometry(QRect(380, 290, 117, 22));
+        tipo_sift_lowe->setChecked(true);
+        tipo_sift_siftgpu = new QRadioButton(Dialogo);
+        tipo_sift->addButton(tipo_sift_siftgpu);
+        tipo_sift_siftgpu->setObjectName(QStringLiteral("tipo_sift_siftgpu"));
+        tipo_sift_siftgpu->setGeometry(QRect(380, 320, 117, 22));
+        parametri_input = new QLineEdit(Dialogo);
+        parametri_input->setObjectName(QStringLiteral("parametri_input"));
+        parametri_input->setGeometry(QRect(370, 370, 171, 27));
+        label_6 = new QLabel(Dialogo);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setGeometry(QRect(380, 350, 141, 17));
 
         retranslateUi(Dialogo);
 
@@ -262,8 +287,13 @@ public:
         label_2->setText(QApplication::translate("Dialogo", "Bin file", 0));
         label->setText(QApplication::translate("Dialogo", "Out file", 0));
         label_9->setText(QApplication::translate("Dialogo", "n. centroidi", 0));
+        tmp_input->setText(QApplication::translate("Dialogo", "./tmp", 0));
+        label_5->setText(QApplication::translate("Dialogo", "temp dir", 0));
         distanza_label->setText(QString());
         label_10->setText(QApplication::translate("Dialogo", "(in m)", 0));
+        tipo_sift_lowe->setText(QApplication::translate("Dialogo", "VLSift", 0));
+        tipo_sift_siftgpu->setText(QApplication::translate("Dialogo", "SiftGPU", 0));
+        label_6->setText(QApplication::translate("Dialogo", "parametri opzionali:", 0));
     } // retranslateUi
 
 };

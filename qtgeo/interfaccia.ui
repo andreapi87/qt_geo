@@ -159,81 +159,95 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetNoConstraint</enum>
       </property>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QLineEdit" name="bin_input"/>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QLineEdit" name="center_input"/>
       </item>
-      <item row="4" column="2">
+      <item row="5" column="2">
        <widget class="QPushButton" name="center_tasto">
         <property name="text">
          <string>Sfoglia</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="2" column="2">
        <widget class="QPushButton" name="out_tasto">
         <property name="text">
          <string>Sfoglia</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>center file</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QLineEdit" name="cluster_input"/>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Cluster file</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="3" column="2">
        <widget class="QPushButton" name="bin_tasto">
         <property name="text">
          <string>Sfoglia</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
+      <item row="4" column="2">
        <widget class="QPushButton" name="cluster_tasto">
         <property name="text">
          <string>Sfoglia</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="out_input"/>
+      </item>
+      <item row="3" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Bin file</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="6" column="1">
+       <widget class="QLineEdit" name="n_centroidi_input"/>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Out file</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="out_input"/>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="n_centroidi_input"/>
-      </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
          <string>n. centroidi</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="tmp_input">
+        <property name="text">
+         <string>./tmp</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>temp dir</string>
         </property>
        </widget>
       </item>
@@ -243,11 +257,6 @@
      <layout class="QHBoxLayout" name="horizontalLayout_4"/>
     </item>
    </layout>
-   <zorder>gridLayoutWidget</zorder>
-   <zorder>opzioni_tasto</zorder>
-   <zorder>horizontalLayoutWidget_3</zorder>
-   <zorder>horizontalLayoutWidget_3</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
   </widget>
   <widget class="QGraphicsView" name="mappa">
    <property name="geometry">
@@ -285,16 +294,68 @@
     <string>(in m)</string>
    </property>
   </widget>
-  <zorder>horizontalLayoutWidget</zorder>
-  <zorder>out_input</zorder>
-  <zorder>horizontalLayoutWidget_2</zorder>
-  <zorder>horizontalLayoutWidget_3</zorder>
-  <zorder>immagine</zorder>
-  <zorder>file_groupbox</zorder>
-  <zorder>mappa</zorder>
-  <zorder>distanza_label</zorder>
-  <zorder>label_10</zorder>
+  <widget class="QRadioButton" name="tipo_sift_lowe">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>290</y>
+     <width>117</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>VLSift</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">tipo_sift</string>
+   </attribute>
+  </widget>
+  <widget class="QRadioButton" name="tipo_sift_siftgpu">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>320</y>
+     <width>117</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>SiftGPU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">tipo_sift</string>
+   </attribute>
+  </widget>
+  <widget class="QLineEdit" name="parametri_input">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>370</y>
+     <width>171</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>350</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>parametri opzionali:</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="tipo_sift"/>
+ </buttongroups>
 </ui>

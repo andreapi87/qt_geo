@@ -6,6 +6,9 @@
 Dialogo::Dialogo(QWidget* genitore) : QDialog(genitore)
 {
 
+    std::locale englocale( "en_US.UTF-8");   // get global locale
+    std::locale::global(englocale);
+    //std::cout.imbue(englocale);  // imbue global locale
     setupUi(this);
     this->setFixedSize(this->size());
     webviewmappa=new QWebView(mappa);
@@ -29,22 +32,40 @@ Dialogo::Dialogo(QWidget* genitore) : QDialog(genitore)
     TastoSfoglia* center_sfoglia=new TastoSfoglia(this,center_tasto,center_input);
     center_sfoglia->set_estensioni(".txt (*.txt)");
 
+    on_tipo_sift_lowe_clicked();
+
     QObject::connect(out_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
     QObject::connect(bin_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
     QObject::connect(cluster_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
     QObject::connect(center_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
     QObject::connect(n_centroidi_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
+    QObject::connect(tmp_input, SIGNAL(textChanged( const QString& )), this, SLOT(salva_configurazione()));
     carica_configurazione();
 }
 
 
-void Dialogo::setmappa(std::string lat,std::string lon, std::string lat_exif, std::string lon_exif)
+std::string get_path_eseguibile()
 {
+        char arg1[1024];
+        char exepath[1024 + 1] = {0};
+
+        sprintf( arg1, "/proc/%d/exe", getpid() );
+        readlink( arg1, exepath, 1024 );
+
+        std::string ritorno(exepath);
+        ritorno= ritorno.substr(0,ritorno.find_last_of("/"));
+//        std::cout<<ritorno<<"\n";
+        return ritorno;
+}
+
+void Dialogo::setmappa(const std::string& lat,const std::string& lon, const std::string& lat_exif, const std::string& lon_exif)
+{
+std::string path_locale=get_path_eseguibile();
 std::string u;
 if(lat=="" || lon=="")
-    u="file:///home/andrea/monnezza/qtgeo/mappa.html?x_ex="+lat_exif+"&y_ex="+lon_exif+"&w="+std::to_string(mappa->size().width())+"&h="+std::to_string(mappa->size().height());
+    u="file:///"+get_path_eseguibile()+"/../mappa.html?x_ex="+lat_exif+"&y_ex="+lon_exif+"&w="+std::to_string(mappa->size().width())+"&h="+std::to_string(mappa->size().height());
 else
-    u="file:///home/andrea/monnezza/qtgeo/mappa.html?x="+lat+"&y="+lon+"&x_ex="+lat_exif+"&y_ex="+lon_exif+"&w="+std::to_string(mappa->size().width())+"&h="+std::to_string(mappa->size().height());
+    u="file:///"+get_path_eseguibile()+"/../mappa.html?x="+lat+"&y="+lon+"&x_ex="+lat_exif+"&y_ex="+lon_exif+"&w="+std::to_string(mappa->size().width())+"&h="+std::to_string(mappa->size().height());
 webviewmappa->setUrl(QUrl(QString::fromStdString(u)));
 std::cout<<u<<"\n";
 }
@@ -71,14 +92,18 @@ void Dialogo::carica_configurazione()
     s.clear();
     getline(f,s);
     n_centroidi_input->setText(s.c_str());
+    s.clear();
+    getline(f,s);
+    tmp_input->setText(s.c_str());
     f.close();
 }
 
 void Dialogo::salva_configurazione()
 {
+
     std::cout<<"salvo\n";
     std::fstream f("./configurazione",std::ios::out);
-    f<<out_input->text().toStdString()<<"\n"<<cluster_input->text().toStdString()<<"\n"<<center_input->text().toStdString()<<"\n"<<bin_input->text().toStdString()<<"\n"<<n_centroidi_input->text().toStdString();
+    f<<out_input->text().toStdString()<<"\n"<<cluster_input->text().toStdString()<<"\n"<<center_input->text().toStdString()<<"\n"<<bin_input->text().toStdString()<<"\n"<<n_centroidi_input->text().toStdString()<<"\n"<<tmp_input->text().toStdString();
     f.close();
 
 
@@ -111,7 +136,7 @@ void Dialogo::on_carica_clicked()
 
     carica_immagine(nomeimmagine, Dialogo::immagine);
 
-
+    if(nomeimmagine.isEmpty()) return;
     //carico i dati gps exif
 
     ExifGPS exifgps=readGPS(nomeimmagine.toStdString());
@@ -119,7 +144,7 @@ void Dialogo::on_carica_clicked()
     /*if(lat_exif.find(",")!=lat_exif.npos)
         lat_exif.replace(lat_exif.find(","),1,".");*/
     lon_exif=std::to_string(exifgps.lon);
-    std::cout<<"SCREENSHOTTA QUESTO "<<lat_exif<<" "<<lon_exif<<"\n ";
+    std::cout<<"Coordinate exif in immagine: "<<lat_exif<<" "<<lon_exif<<"\n ";
     /*if(lon_exif.find(",")!=lon_exif.npos)
         lon_exif.replace(lon_exif.find(","),1,".");
     std::cout<<lat_exif<<" "<<lon_exif<<endl;
@@ -130,24 +155,45 @@ void Dialogo::on_carica_clicked()
 
 void Dialogo::on_stima_clicked()
 {
- qDebug()<<"premuto stima";
+// qDebug()<<"Premuto stima\n";
+ //std::cout<<"Se tmp non esiste la creo\n";
+ boost::filesystem::create_directories((tmp_input->text().toStdString()).c_str());
  localizzazione acg;
- acg.imposta_path(out_input->text().toStdString(),cluster_input->text().toStdString(),center_input->text().toStdString(),bin_input->text().toStdString(),n_centroidi_input->text().toStdString());
+ acg.imposta_path(out_input->text().toStdString(),cluster_input->text().toStdString(),center_input->text().toStdString(),bin_input->text().toStdString(),n_centroidi_input->text().toStdString(),tmp_input->text().toStdString());
  QApplication::setOverrideCursor(Qt::WaitCursor);
  stima->setEnabled(false);
- std::vector<std::string> coordinate=acg.localizza(nomeimmagine.toStdString());
+ char tipo_sift_scelto=0;
+ if(tipo_sift_siftgpu->isChecked())
+    tipo_sift_scelto=1;
+
+ std::string parametri=parametri_input->text().toStdString();
+ std::vector<std::string> coordinate=acg.localizza(nomeimmagine.toStdString(),tipo_sift_scelto,parametri);
  std::string lon=coordinate.at(0);
  std::string lat=coordinate.at(1);
 
  setmappa(lat,lon,lat_exif,lon_exif);
- double dist=acg.calcola_distanza(::atof(lat.replace(lat.find("."),1,",").c_str()),::atof(lon.replace(lon.find("."),1,",").c_str()),::atof(lat_exif.replace(lat_exif.find("."),1,",").c_str()),::atof(lon_exif.replace(lon_exif.find("."),1,",").c_str()));
- std::cout<<"distanza: "<<dist<<"\n";
+
+ double dist=acg.calcola_distanza(atof(lat.c_str()),atof(lon.c_str()),atof(lat_exif.c_str()),atof(lon_exif.c_str()));
+ std::cout<<"Distanza: "<<dist<<"\n";
 distanza_etichetta->setText(QString(std::to_string(dist).c_str()));
 
  stima->setEnabled(true);
  QApplication::restoreOverrideCursor();
 
 
+}
+
+void Dialogo::on_tipo_sift_lowe_clicked()
+{
+   std::string parametri=" --peak-thresh=3.4 ";
+   parametri_input->setText(parametri.c_str());
+
+}
+
+void Dialogo::on_tipo_sift_siftgpu_clicked()
+{
+    std::string parametri=" -cuda -loweo ";
+    parametri_input->setText(parametri.c_str());
 }
 
 

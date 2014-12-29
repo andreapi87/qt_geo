@@ -1,7 +1,22 @@
 #include "localizzazione.hpp"
 
 
-ExifGPS readGPS(std::string file)
+bool file_esiste(const std::string& filename) {
+  std::ifstream ifile(filename.c_str());
+  return ifile;
+}
+
+void rimuovi_file(const std::string& nome_file)
+{
+    if(file_esiste(nome_file))
+    {
+            boost::filesystem::wpath file(nome_file);
+            boost::filesystem::remove(file);
+    }
+}
+
+
+ExifGPS readGPS(const std::string&  file)
 {
 Exiv2::ExifData exifData;
 Exiv2::Image::AutoPtr image;
@@ -45,7 +60,7 @@ ExifGPS gps;
 gps.lat = lat;
 gps.lon = lon;
 gps.altitude = 0;
-std::cout << "lat " << latValue.toString() << " ref " << latRef.toString() << " lon " << lonValue.toString() << " ref " << lonRef.toString() << std::endl;
+std::cout << "latitudine: " << latValue.toString() << " latidudineref: " << latRef.toString() << " longitudine: " << lonValue.toString() << " longitudineref: " << lonRef.toString() << std::endl;
 return gps;
 }
 
@@ -53,78 +68,103 @@ return gps;
 const std::string get_path_senza_estensione(const std::string& filename)
 {
 
-  std::cout<<"PATH+BASENAME: ";
+  //std::cout<<"PATH+BASENAME: ";
   const int i = filename.rfind(".",filename.size());
-  std::cout<<filename.substr(0,i)<<"\n";
+  //std::cout<<filename.substr(0,i)<<"\n";
   return filename.substr(0,i);
 }
 
 const std::string get_basename(const std::string& filename)
 {
-  std::cout<<"BASENAME: ";
+
   const int i = filename.rfind("/",filename.size());
-  std::cout<<filename.substr(i+1,filename.size())<<"\n";
+  //std::cout<<filename.substr(i+1,filename.size())<<"\n";
   return filename.substr(i+1,filename.size());
 }
 
 
 localizzazione::localizzazione()
 {
-    EXEC_JPG2PGM="./eseguibili/jpeg2pgm";
+    boost::filesystem::path full_path( boost::filesystem::current_path() );
+    std::string basepath=full_path.string();
+    //std::cout<<basepath<<"\n";
+
+    EXEC_JPG2PGM=basepath+"/eseguibili/jpeg2pgm";
     EXEC_JPG2PGM2="convert";
-    EXEC_FEAT="./eseguibili/sift";
-    EXEC_FEAT2="./eseguibili/sift2";
-    EXEC_SIFT2KEY="./eseguibili/FromSIFTtoKEY";
-    EXEC_COMPDESCASSIGMENT="./eseguibili/compute_desc_assignments";
-    EXEC_ACGGEOLOCALIZER="./eseguibili/acg_localizer_active_search";
-    EXEC_SATTLER2CAMERA="./eseguibili/conv.sh";
-    EXEC_CAMERA2LATLONG="./eseguibili/from_sattler_to_lat_long";
-    this->PATH_TMP="./";
+    EXEC_FEAT=basepath+"/eseguibili/sift";
+    EXEC_FEAT2=basepath+"/eseguibili/sift2";
+    EXEC_FEATGPU=basepath+"/eseguibili/siftGPU";
+    EXEC_SIFT2KEY=basepath+"/eseguibili/FromSIFTtoKEY";
+    EXEC_COMPDESCASSIGMENT=basepath+"/eseguibili/compute_desc_assignments";
+    EXEC_ACGGEOLOCALIZER=basepath+"/eseguibili/acg_localizer_active_search";
+    EXEC_SATTLER2CAMERA=basepath+"/eseguibili/conv.sh";
+    EXEC_CAMERA2LATLONG=basepath+"/eseguibili/from_sattler_to_lat_long";
+    this->PATH_TMP=basepath+"/tmp";
 }
 
-void localizzazione::imposta_path(std::string PATH_RICOSTRUZIONE_OUT,std::string PATH_CENTROIDI,std::string PATH_MEDIA_CAM_CENTER,std::string PATH_DESC_ASSIGN,std::string N_CENTROIDI)
+void localizzazione::imposta_path(const std::string&  PATH_RICOSTRUZIONE_OUT,const std::string&  PATH_CENTROIDI,const std::string&  PATH_MEDIA_CAM_CENTER,const std::string&  PATH_DESC_ASSIGN,const std::string&  N_CENTROIDI,const std::string& PATH_TMP)
 {
  this->PATH_RICOSTRUZIONE_OUT=PATH_RICOSTRUZIONE_OUT;
  this->PATH_CENTROIDI=PATH_CENTROIDI;
  this->PATH_MEDIA_CAM_CENTER=PATH_MEDIA_CAM_CENTER;
  this->PATH_DESC_ASSIGN=PATH_DESC_ASSIGN;
  this->N_CENTROIDI=N_CENTROIDI;
- this->PATH_TMP="./";
+ this->PATH_TMP=PATH_TMP;
 
 }
 
-std::vector<std::string> localizzazione::localizza(std::string path_img_jpg)
+std::vector<std::string> localizzazione::localizza(const std::string& path_img_jpg,char tipo_sift,std::string parametri)
 {
-        std::string path_file_feat=calcola_sift(path_img_jpg);
+        std::string path_file_feat=calcola_sift(path_img_jpg,tipo_sift,parametri);
         return acg_localizer(path_file_feat);
 
 
 }
 
-std::string localizzazione::calcola_sift(std::string path_img_jpg)
+std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char tipo_sift,std::string parametri)
 {
-    std::cout<<"calcolo sift di "<<path_img_jpg<<"\n";
     std::string fullname_senza_estensione=get_path_senza_estensione(path_img_jpg);
     std::string basename=get_basename(fullname_senza_estensione);
+    std::string fullname_out=PATH_TMP+"/"+basename+".key";
+    std::string comando;
+
+    rimuovi_file(fullname_out);
+    switch(tipo_sift)
+    {
+    case 0: //LOWE SIFT
+        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (lowe)\n";
+
 
     //CALCOLO PGM
-    std::string comando=EXEC_JPG2PGM+" "+path_img_jpg+" "+PATH_TMP+"/"+basename+".pgm >> out.txt 2>errori.txt";
-    system(comando.c_str());
+        comando=EXEC_JPG2PGM+" "+path_img_jpg+" "+PATH_TMP+"/"+basename+".pgm >> out.txt 2>errori.txt";
+        system(comando.c_str());
     //CALCOLO SIFT
-    comando=EXEC_FEAT+" "+PATH_TMP+"/"+basename+".pgm --peak-thresh=3.4 -o "+PATH_TMP+"/"+basename+".key >> out.txt 2>errori.txt ;";
-    system(comando.c_str());
+        //parametri=" --peak-thresh=3.4 ";
+        comando=EXEC_FEAT+" "+PATH_TMP+"/"+basename+".pgm "+parametri+" -o "+fullname_out+" >> out.txt 2>errori.txt ;";
+        std::cout<<comando<<"\n";
+        system(comando.c_str());
+        break;
+    case 1: //SIFTGPU
+        //parametri=" -cuda -loweo ";
+        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (siftGPU)\n";
+        comando=EXEC_FEATGPU+" "+parametri+" -i "+path_img_jpg+" -o "+fullname_out+" >>out.txt 2>errori.txt" ;
+        std::cout<<comando<<"\n";
+        system(comando.c_str());
+
+        break;
+    }
 
     //SPOSTO LA JPG IN TEMP
     comando="cp "+path_img_jpg+" "+PATH_TMP+"/";
     system(comando.c_str());
 
-    return PATH_TMP+"/"+basename+".key";
-
+    return fullname_out;
     //acg_localizer(PATH_TMP+"/"+basename+".key");
 }
 
-std::vector<std::string> localizzazione::acg_localizer(std::string path_img_sift)
+std::vector<std::string> localizzazione::acg_localizer(const std::string& path_img_sift)
 {
+
     std::cout<<"calcolo geolocalizzazione di "<<path_img_sift<<"\n";
     std::string fullname_senza_estensione=get_path_senza_estensione(path_img_sift);
     std::string basename=get_basename(fullname_senza_estensione);
@@ -134,6 +174,13 @@ std::vector<std::string> localizzazione::acg_localizer(std::string path_img_sift
     std::string FILE_LOG_SATTLER=PATH_TMP+"/"+basename+"_sattler.txt";
     std::string FILE_CAMERA=PATH_TMP+"/"+basename+".key.camera";
     std::string FILE_COORD_FINAL=PATH_TMP+"/"+basename+"_coord_final.txt";
+
+    rimuovi_file(FILE_LIST_KEY);
+    rimuovi_file(FILE_LIST_SIFT);
+    rimuovi_file(FILE_LOG_SATTLER);
+    rimuovi_file(FILE_CAMERA);
+    rimuovi_file(FILE_COORD_FINAL);
+
 
     //GENERO FILE NECESSARI
     std:: string comando="echo '"+PATH_TMP+"/"+basename+".key' > "+FILE_LIST_KEY;
@@ -146,7 +193,7 @@ std::vector<std::string> localizzazione::acg_localizer(std::string path_img_sift
 
     //ACG2CAMERA
     comando=EXEC_SATTLER2CAMERA+" "+FILE_LOG_SATTLER+" "+FILE_LIST_KEY+" "+PATH_TMP;
-    //system(comando.c_str());
+    system(comando.c_str());
 
     //CAMERA2LATLONG
     comando=EXEC_CAMERA2LATLONG+" "+FILE_CAMERA+" "+PATH_MEDIA_CAM_CENTER+" > "+FILE_COORD_FINAL;
@@ -173,7 +220,7 @@ std::vector<std::string> localizzazione::acg_localizer(std::string path_img_sift
         }
 
     }
-    std::cout<<"lon:"<<s1<<"\nlat:"<<s2<<"\n";
+    std::cout<<"Longitudine: "<<s1<<"\nLatitudine: "<<s2<<"\n";
     std::vector<std::string> ritorno;
     ritorno.push_back(s1);
     ritorno.push_back(s2);
@@ -191,7 +238,7 @@ return r * 180/ M_PI;
 
 double localizzazione::calcola_distanza(double lat1,double lon1,double lat2,double lon2)
 {
-   std::cout<<"distanza tra "<<lat1<<" "<<lon2<<" e "<<lat2<<" "<<lon2<<"\n";
+   std::cout<<"distanza tra "<<lat1<<","<<lon2<<" e "<<lat2<<","<<lon2<<":\n";
    double R = 6371; // km
    double f1 = deg2rad(lat1);
    double f2 = deg2rad(lat2);

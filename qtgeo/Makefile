@@ -18,7 +18,7 @@ CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES) -std=c++11
 INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -Iinclude -I/usr/include/qt5 -I/usr/include/qt5/QtWebKitWidgets -I/usr/include/qt5/QtQuick -I/usr/include/qt5/QtOpenGL -I/usr/include/qt5/QtPrintSupport -I/usr/include/qt5/QtWebKit -I/usr/include/qt5/QtQml -I/usr/include/qt5/QtLocation -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtNetwork -I/usr/include/qt5/QtPositioning -I/usr/include/qt5/QtSensors -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I. -I.
 LINK          = g++
 LFLAGS        = -m64 -Wl,-O1 -Wl,-rpath-link,/usr/lib/x86_64-linux-gnu
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5WebKitWidgets -L/usr/lib/x86_64-linux-gnu -lQt5Quick -lQt5OpenGL -lQt5PrintSupport -lQt5WebKit -lQt5Qml -lQt5Location -lQt5Widgets -lQt5Network -lQt5Positioning -lQt5Sensors -lQt5Gui -lQt5Core -lGL -lpthread -lexiv2
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5WebKitWidgets -L/usr/lib/x86_64-linux-gnu -lQt5Quick -lQt5OpenGL -lQt5PrintSupport -lQt5WebKit -lQt5Qml -lQt5Location -lQt5Widgets -lQt5Network -lQt5Positioning -lQt5Sensors -lQt5Gui -lQt5Core -lGL -lpthread -lexiv2 -lboost_filesystem -lboost_system
 AR            = ar cqs
 RANLIB        =
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
