@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
-#include <boost/filesystem.hpp>
+
 using std::vector;
 using std::iostream;
 
