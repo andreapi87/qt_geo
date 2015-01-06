@@ -20,20 +20,31 @@ function getParameterByName(name) {
 	}
       function initialize() 
 	{
+	 var options;
 	 if(getParameterByName('x')!="" && getParameterByName('y')!="")
 	 { 	
-	  var latlng = new google.maps.LatLng(getParameterByName('x'),getParameterByName('y'));
-	 }
-	 var latlng_exif = new google.maps.LatLng(getParameterByName('x_ex'),getParameterByName('y_ex'));
-	 var options = { zoom: 18,
-                   center: latlng_exif               
+	  	var latlng = new google.maps.LatLng(getParameterByName('x'),getParameterByName('y'));
+		options = { zoom: 18,
+                   center: latlng               
                  }; 
+	 }
+	 if(getParameterByName('x_ex')!="" && getParameterByName('y_ex')!="")
+	 {
+	 	var latlng_exif = new google.maps.LatLng(getParameterByName('x_ex'),getParameterByName('y_ex'));
+		options = { zoom: 18,
+                   center: latlng_exif               
+                 }; 	 
+	}	 
+
 	 var map = new google.maps.Map(document.getElementById('map_canvas'), options);	
 	 if(getParameterByName('x')!="" && getParameterByName('y')!="")
 	 { 
 	 	var myMarker = new google.maps.Marker({ position: latlng, map: map, title:'tu secondo me sei qui!'});
  	 }
-	 var myMarker_exif = new google.maps.Marker({ position: latlng_exif, map: map, title:'secondo il tuo gps invece sei qui!', icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
+	if(getParameterByName('x_ex')!="" && getParameterByName('y_ex')!="")
+	{
+	 	var myMarker_exif = new google.maps.Marker({ position: latlng_exif, map: map, title:'secondo il tuo gps invece sei qui!', icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
+	}
  document.getElementById("map_canvas").style.width=getParameterByName('w')+'px';
  document.getElementById("map_canvas").style.height=getParameterByName('h')+'px';
 	}

@@ -1,6 +1,6 @@
-/home/andrea/monnezza/qtgeo/qtgeo/eseguibili/univ31geo_translato_rispetto_centroide.out
-/home/andrea/monnezza/qtgeo/qtgeo/eseguibili/centroids_150.txt
-/home/andrea/monnezza/qtgeo/qtgeo/eseguibili/univ31geo_valore_centroide.txt
-/home/andrea/monnezza/qtgeo/qtgeo/eseguibili/bundle.desc_assignments.integer_mean.voctree.clusters.150k.bin
-150
-./tmpaaaaa
+/home/andrea/monnezza/localizzazione/dataset/univ28_vlfeat_geo_translato_rispetto_centroide.out
+/home/andrea/monnezza/localizzazione/dataset/centroidi_75.txt
+/home/andrea/monnezza/localizzazione/dataset/univ28_vlfeat_geo_valore_centroide.txt
+/home/andrea/monnezza/localizzazione/dataset/univ28_vlfeat_geo_trans.75.bin
+75
+./tmp_siftgpu

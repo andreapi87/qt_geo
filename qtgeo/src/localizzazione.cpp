@@ -18,50 +18,63 @@ void rimuovi_file(const std::string& nome_file)
 
 ExifGPS readGPS(const std::string&  file)
 {
-Exiv2::ExifData exifData;
-Exiv2::Image::AutoPtr image;
-try {
-image = Exiv2::ImageFactory::open(file);
-} catch(Exiv2::Error e) {
-fprintf(stderr, "Failed to open file %s.\n", file.c_str());
-// return 0;
-}
-image->readMetadata();
-if (image.get() == NULL) {
-fprintf(stderr, "Failed to read file %s.\n", file.c_str());
-// return 0;
-}
-exifData = image->exifData();
+    Exiv2::ExifData exifData;
+    Exiv2::Image::AutoPtr image;
+    try {
+    image = Exiv2::ImageFactory::open(file);
+    } catch(Exiv2::Error e) {
+    fprintf(stderr, "Failed to open file %s.\n", file.c_str());
+    // return 0;
+    }
+    image->readMetadata();
+    if (image.get() == NULL)
+    {
+        fprintf(stderr, "Failed to read file %s.\n", file.c_str());
+    // return 0;
+    }
+    exifData = image->exifData();
+
+    if (exifData.empty())
+    {
+
+         std::string error= ": No Exif data found in the file\n";
+        throw Exiv2::Error(1, error);
+    }
+
 // Exiv2::Exifdatum& gpsVer = exifData["Exif.GPSInfo.GPSVersionID"];
-Exiv2::Exifdatum& latValue = exifData["Exif.GPSInfo.GPSLatitude"];
-Exiv2::Exifdatum& lonValue = exifData["Exif.GPSInfo.GPSLongitude"];
-Exiv2::Exifdatum& latRef = exifData["Exif.GPSInfo.GPSLatitudeRef"];
-Exiv2::Exifdatum& lonRef = exifData["Exif.GPSInfo.GPSLongitudeRef"];
-double lat;
-double lon;
-Exiv2::Rational degrees;
-Exiv2::Rational minutes;
-Exiv2::Rational seconds;
-degrees = latValue.toRational(0);
-minutes = latValue.toRational(1);
-seconds = latValue.toRational(2);
-lat = (double)degrees.first/degrees.second  + ((double)minutes.first/minutes.second/60) + ((double)seconds.first/seconds.second/3600);//((double)degrees.first / (double)degrees.second) + ((double)minutes.first / (minutes.second * 60)) + ((double)seconds.first / 3600);
-if (strcmp(latRef.toString().c_str(), "S") == 0) {
-lat = -lat;
-}
-degrees = lonValue.toRational(0);
-minutes = lonValue.toRational(1);
-seconds = lonValue.toRational(2);
-lon =  (double)degrees.first/degrees.second  + ((double)minutes.first/minutes.second/60) + ((double)seconds.first/seconds.second/3600);///((double)degrees.first / (double)degrees.second) + ((double)minutes.first / (minutes.second * 60)) + ((double)seconds.first / 3600);
-if (strcmp(lonRef.toString().c_str(), "W") == 0) {
-lon = -lon;
-}
-ExifGPS gps;
-gps.lat = lat;
-gps.lon = lon;
-gps.altitude = 0;
-std::cout << "latitudine: " << latValue.toString() << " latidudineref: " << latRef.toString() << " longitudine: " << lonValue.toString() << " longitudineref: " << lonRef.toString() << std::endl;
-return gps;
+    Exiv2::Exifdatum& latValue = exifData["Exif.GPSInfo.GPSLatitude"];
+    Exiv2::Exifdatum& lonValue = exifData["Exif.GPSInfo.GPSLongitude"];
+    Exiv2::Exifdatum& latRef = exifData["Exif.GPSInfo.GPSLatitudeRef"];
+    Exiv2::Exifdatum& lonRef = exifData["Exif.GPSInfo.GPSLongitudeRef"];
+
+
+
+    double lat;
+    double lon;
+    Exiv2::Rational degrees;
+    Exiv2::Rational minutes;
+    Exiv2::Rational seconds;
+    degrees = latValue.toRational(0);
+    minutes = latValue.toRational(1);
+    seconds = latValue.toRational(2);
+    lat = (double)degrees.first/degrees.second  + ((double)minutes.first/minutes.second/60) + ((double)seconds.first/seconds.second/3600);//((double)degrees.first / (double)degrees.second) + ((double)minutes.first / (minutes.second * 60)) + ((double)seconds.first / 3600);
+    if (strcmp(latRef.toString().c_str(), "S") == 0) {
+    lat = -lat;
+    }
+    degrees = lonValue.toRational(0);
+    minutes = lonValue.toRational(1);
+    seconds = lonValue.toRational(2);
+    lon =  (double)degrees.first/degrees.second  + ((double)minutes.first/minutes.second/60) + ((double)seconds.first/seconds.second/3600);///((double)degrees.first / (double)degrees.second) + ((double)minutes.first / (minutes.second * 60)) + ((double)seconds.first / 3600);
+    if (strcmp(lonRef.toString().c_str(), "W") == 0)
+    {
+        lon = -lon;
+    }
+    ExifGPS gps;
+    gps.lat = lat;
+    gps.lon = lon;
+    gps.altitude = 0;
+    std::cout << "EXIF: latitudine: " << latValue.toString() << " latidudineref: " << latRef.toString() << " longitudine: " << lonValue.toString() << " longitudineref: " << lonRef.toString() << std::endl;
+    return gps;
 }
 
 
@@ -131,8 +144,8 @@ std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char ti
     rimuovi_file(fullname_out);
     switch(tipo_sift)
     {
-    case 0: //LOWE SIFT
-        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (lowe)\n";
+    case 0: //VKSIFT SIFT
+        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (VLSift)\n";
 
 
     //CALCOLO PGM

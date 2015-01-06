@@ -41,6 +41,9 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QPushButton *carica;
     QSpacerItem *horizontalSpacer;
+    QLineEdit *lat_input;
+    QSpacerItem *horizontalSpacer_2;
+    QLineEdit *lon_input;
     QGraphicsView *immagine;
     QGroupBox *file_groupbox;
     QFormLayout *formLayout;
@@ -65,10 +68,13 @@ public:
     QGraphicsView *mappa;
     QLabel *distanza_label;
     QLabel *label_10;
-    QRadioButton *tipo_sift_lowe;
+    QGroupBox *features_groupbox;
+    QRadioButton *tipo_sift_vlsift;
     QRadioButton *tipo_sift_siftgpu;
-    QLineEdit *parametri_input;
     QLabel *label_6;
+    QLineEdit *parametri_input;
+    QLabel *label_7;
+    QLabel *label_8;
     QButtonGroup *tipo_sift;
 
     void setupUi(QDialog *Dialogo)
@@ -78,7 +84,7 @@ public:
         Dialogo->resize(561, 531);
         horizontalLayoutWidget_2 = new QWidget(Dialogo);
         horizontalLayoutWidget_2->setObjectName(QStringLiteral("horizontalLayoutWidget_2"));
-        horizontalLayoutWidget_2->setGeometry(QRect(271, 207, 122, 27));
+        horizontalLayoutWidget_2->setGeometry(QRect(311, 227, 122, 27));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -107,7 +113,7 @@ public:
 
         horizontalLayoutWidget_3 = new QWidget(Dialogo);
         horizontalLayoutWidget_3->setObjectName(QStringLiteral("horizontalLayoutWidget_3"));
-        horizontalLayoutWidget_3->setGeometry(QRect(9, 205, 133, 29));
+        horizontalLayoutWidget_3->setGeometry(QRect(10, 230, 251, 29));
         horizontalLayout_2 = new QHBoxLayout(horizontalLayoutWidget_3);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -120,13 +126,29 @@ public:
 
         horizontalLayout_2->addItem(horizontalSpacer);
 
+        lat_input = new QLineEdit(horizontalLayoutWidget_3);
+        lat_input->setObjectName(QStringLiteral("lat_input"));
+        lat_input->setEnabled(false);
+
+        horizontalLayout_2->addWidget(lat_input);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_2);
+
+        lon_input = new QLineEdit(horizontalLayoutWidget_3);
+        lon_input->setObjectName(QStringLiteral("lon_input"));
+        lon_input->setEnabled(false);
+
+        horizontalLayout_2->addWidget(lon_input);
+
         immagine = new QGraphicsView(Dialogo);
         immagine->setObjectName(QStringLiteral("immagine"));
         immagine->setGeometry(QRect(9, 9, 256, 192));
         file_groupbox = new QGroupBox(Dialogo);
         file_groupbox->setObjectName(QStringLiteral("file_groupbox"));
         file_groupbox->setEnabled(true);
-        file_groupbox->setGeometry(QRect(9, 240, 354, 191));
+        file_groupbox->setGeometry(QRect(0, 310, 354, 191));
         QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
@@ -238,27 +260,46 @@ public:
         mappa->setGeometry(QRect(271, 9, 256, 192));
         distanza_label = new QLabel(Dialogo);
         distanza_label->setObjectName(QStringLiteral("distanza_label"));
-        distanza_label->setGeometry(QRect(400, 210, 67, 17));
+        distanza_label->setGeometry(QRect(440, 230, 67, 17));
         label_10 = new QLabel(Dialogo);
         label_10->setObjectName(QStringLiteral("label_10"));
-        label_10->setGeometry(QRect(350, 230, 67, 17));
-        tipo_sift_lowe = new QRadioButton(Dialogo);
+        label_10->setGeometry(QRect(390, 250, 67, 17));
+        features_groupbox = new QGroupBox(Dialogo);
+        features_groupbox->setObjectName(QStringLiteral("features_groupbox"));
+        features_groupbox->setGeometry(QRect(360, 310, 171, 181));
+        tipo_sift_vlsift = new QRadioButton(features_groupbox);
         tipo_sift = new QButtonGroup(Dialogo);
         tipo_sift->setObjectName(QStringLiteral("tipo_sift"));
-        tipo_sift->addButton(tipo_sift_lowe);
-        tipo_sift_lowe->setObjectName(QStringLiteral("tipo_sift_lowe"));
-        tipo_sift_lowe->setGeometry(QRect(380, 290, 117, 22));
-        tipo_sift_lowe->setChecked(true);
-        tipo_sift_siftgpu = new QRadioButton(Dialogo);
+        tipo_sift->addButton(tipo_sift_vlsift);
+        tipo_sift_vlsift->setObjectName(QStringLiteral("tipo_sift_vlsift"));
+        tipo_sift_vlsift->setGeometry(QRect(10, 30, 117, 22));
+        tipo_sift_vlsift->setChecked(true);
+        tipo_sift_siftgpu = new QRadioButton(features_groupbox);
         tipo_sift->addButton(tipo_sift_siftgpu);
         tipo_sift_siftgpu->setObjectName(QStringLiteral("tipo_sift_siftgpu"));
-        tipo_sift_siftgpu->setGeometry(QRect(380, 320, 117, 22));
-        parametri_input = new QLineEdit(Dialogo);
-        parametri_input->setObjectName(QStringLiteral("parametri_input"));
-        parametri_input->setGeometry(QRect(370, 370, 171, 27));
-        label_6 = new QLabel(Dialogo);
+        tipo_sift_siftgpu->setGeometry(QRect(10, 60, 117, 22));
+        label_6 = new QLabel(features_groupbox);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(380, 350, 141, 17));
+        label_6->setGeometry(QRect(0, 100, 141, 17));
+        parametri_input = new QLineEdit(features_groupbox);
+        parametri_input->setObjectName(QStringLiteral("parametri_input"));
+        parametri_input->setGeometry(QRect(0, 120, 171, 27));
+        label_6->raise();
+        parametri_input->raise();
+        tipo_sift_vlsift->raise();
+        tipo_sift_siftgpu->raise();
+        tipo_sift_vlsift->raise();
+        tipo_sift_siftgpu->raise();
+        label_6->raise();
+        parametri_input->raise();
+        label_7 = new QLabel(Dialogo);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setGeometry(QRect(110, 210, 71, 20));
+        label_7->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
+        label_8 = new QLabel(Dialogo);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(190, 210, 81, 20));
+        label_8->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
 
         retranslateUi(Dialogo);
 
@@ -291,9 +332,12 @@ public:
         label_5->setText(QApplication::translate("Dialogo", "temp dir", 0));
         distanza_label->setText(QString());
         label_10->setText(QApplication::translate("Dialogo", "(in m)", 0));
-        tipo_sift_lowe->setText(QApplication::translate("Dialogo", "VLSift", 0));
+        features_groupbox->setTitle(QApplication::translate("Dialogo", "Features", 0));
+        tipo_sift_vlsift->setText(QApplication::translate("Dialogo", "VLSift", 0));
         tipo_sift_siftgpu->setText(QApplication::translate("Dialogo", "SiftGPU", 0));
         label_6->setText(QApplication::translate("Dialogo", "parametri opzionali:", 0));
+        label_7->setText(QApplication::translate("Dialogo", "Latitudine", 0));
+        label_8->setText(QApplication::translate("Dialogo", "Longitudine", 0));
     } // retranslateUi
 
 };

@@ -5,6 +5,7 @@
 #include <QtWidgets/QGraphicsPixmapItem>
 #include <QtWebKitWidgets/QWebView>
 #include <QtWebKitWidgets/QWebFrame>
+#include <QtWidgets/QMessageBox>
 
 #include <string>
 #include <iostream>
@@ -28,7 +29,7 @@ public:
 private slots:
     void on_carica_clicked();
     void on_stima_clicked();
-    void on_tipo_sift_lowe_clicked();
+    void on_tipo_sift_vlsift_clicked();
     void on_tipo_sift_siftgpu_clicked();
     void salva_configurazione();
     void carica_configurazione();

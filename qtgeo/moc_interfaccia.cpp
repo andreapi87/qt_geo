@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Dialogo_t {
     QByteArrayData data[8];
-    char stringdata[143];
+    char stringdata[145];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,13 +33,13 @@ QT_MOC_LITERAL(0, 0, 7),
 QT_MOC_LITERAL(1, 8, 17),
 QT_MOC_LITERAL(2, 26, 0),
 QT_MOC_LITERAL(3, 27, 16),
-QT_MOC_LITERAL(4, 44, 25),
-QT_MOC_LITERAL(5, 70, 28),
-QT_MOC_LITERAL(6, 99, 20),
-QT_MOC_LITERAL(7, 120, 21)
+QT_MOC_LITERAL(4, 44, 27),
+QT_MOC_LITERAL(5, 72, 28),
+QT_MOC_LITERAL(6, 101, 20),
+QT_MOC_LITERAL(7, 122, 21)
     },
     "Dialogo\0on_carica_clicked\0\0on_stima_clicked\0"
-    "on_tipo_sift_lowe_clicked\0"
+    "on_tipo_sift_vlsift_clicked\0"
     "on_tipo_sift_siftgpu_clicked\0"
     "salva_configurazione\0carica_configurazione\0"
 };
@@ -84,7 +84,7 @@ void Dialogo::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         switch (_id) {
         case 0: _t->on_carica_clicked(); break;
         case 1: _t->on_stima_clicked(); break;
-        case 2: _t->on_tipo_sift_lowe_clicked(); break;
+        case 2: _t->on_tipo_sift_vlsift_clicked(); break;
         case 3: _t->on_tipo_sift_siftgpu_clicked(); break;
         case 4: _t->salva_configurazione(); break;
         case 5: _t->carica_configurazione(); break;
