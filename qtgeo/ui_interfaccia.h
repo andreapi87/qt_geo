@@ -15,6 +15,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -25,6 +26,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 
@@ -75,13 +77,15 @@ public:
     QLineEdit *parametri_input;
     QLabel *label_7;
     QLabel *label_8;
+    QFrame *frame;
+    QTextBrowser *log_text_browser;
     QButtonGroup *tipo_sift;
 
     void setupUi(QDialog *Dialogo)
     {
         if (Dialogo->objectName().isEmpty())
             Dialogo->setObjectName(QStringLiteral("Dialogo"));
-        Dialogo->resize(561, 531);
+        Dialogo->resize(843, 531);
         horizontalLayoutWidget_2 = new QWidget(Dialogo);
         horizontalLayoutWidget_2->setObjectName(QStringLiteral("horizontalLayoutWidget_2"));
         horizontalLayoutWidget_2->setGeometry(QRect(311, 227, 122, 27));
@@ -300,6 +304,14 @@ public:
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setGeometry(QRect(190, 210, 81, 20));
         label_8->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
+        frame = new QFrame(Dialogo);
+        frame->setObjectName(QStringLiteral("frame"));
+        frame->setGeometry(QRect(540, 10, 301, 491));
+        frame->setFrameShape(QFrame::StyledPanel);
+        frame->setFrameShadow(QFrame::Raised);
+        log_text_browser = new QTextBrowser(frame);
+        log_text_browser->setObjectName(QStringLiteral("log_text_browser"));
+        log_text_browser->setGeometry(QRect(0, 0, 301, 491));
 
         retranslateUi(Dialogo);
 

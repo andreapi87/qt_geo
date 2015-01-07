@@ -126,15 +126,15 @@ void localizzazione::imposta_path(const std::string&  PATH_RICOSTRUZIONE_OUT,con
 
 }
 
-std::vector<std::string> localizzazione::localizza(const std::string& path_img_jpg,char tipo_sift,std::string parametri)
+std::vector<std::string> localizzazione::localizza(const std::string& path_img_jpg,char tipo_sift,const std::string& parametri,std::string& log)
 {
-        std::string path_file_feat=calcola_sift(path_img_jpg,tipo_sift,parametri);
-        return acg_localizer(path_file_feat);
+        std::string path_file_feat=calcola_sift(path_img_jpg,tipo_sift,parametri,log);
+        return acg_localizer(path_file_feat,log);
 
 
 }
 
-std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char tipo_sift,std::string parametri)
+std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char tipo_sift,const std::string& parametri, std::string& log)
 {
     std::string fullname_senza_estensione=get_path_senza_estensione(path_img_jpg);
     std::string basename=get_basename(fullname_senza_estensione);
@@ -145,7 +145,7 @@ std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char ti
     switch(tipo_sift)
     {
     case 0: //VKSIFT SIFT
-        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (VLSift)\n";
+        log+="Calcolo sift di "+path_img_jpg+" (VLSift)\n\n";
 
 
     //CALCOLO PGM
@@ -154,14 +154,14 @@ std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char ti
     //CALCOLO SIFT
         //parametri=" --peak-thresh=3.4 ";
         comando=EXEC_FEAT+" "+PATH_TMP+"/"+basename+".pgm "+parametri+" -o "+fullname_out+" >> out.txt 2>errori.txt ;";
-        std::cout<<comando<<"\n";
+        log+=comando+"\n\n";
         system(comando.c_str());
         break;
     case 1: //SIFTGPU
         //parametri=" -cuda -loweo ";
-        std::cout<<"Calcolo sift di "<<path_img_jpg<<" (siftGPU)\n";
+        log+="Calcolo sift di "+path_img_jpg+" (siftGPU)\n\n";
         comando=EXEC_FEATGPU+" "+parametri+" -i "+path_img_jpg+" -o "+fullname_out+" >>out.txt 2>errori.txt" ;
-        std::cout<<comando<<"\n";
+        log+=comando+"\n\n";
         system(comando.c_str());
 
         break;
@@ -175,10 +175,14 @@ std::string localizzazione::calcola_sift(const std::string& path_img_jpg,char ti
     //acg_localizer(PATH_TMP+"/"+basename+".key");
 }
 
-std::vector<std::string> localizzazione::acg_localizer(const std::string& path_img_sift)
+std::vector<std::string> localizzazione::acg_localizer(const std::string& path_img_sift,std::string& log)
 {
-
-    std::cout<<"calcolo geolocalizzazione di "<<path_img_sift<<"\n";
+    if(!file_esiste(path_img_sift))
+    {
+        log+="FILE SIFT NON GENERATO!IMPOSSIBILE PROSEGUIRE\n\n";
+        throw std::bad_exception();
+    }
+    log+="calcolo geolocalizzazione di "+path_img_sift+"\n";
     std::string fullname_senza_estensione=get_path_senza_estensione(path_img_sift);
     std::string basename=get_basename(fullname_senza_estensione);
 
@@ -196,20 +200,23 @@ std::vector<std::string> localizzazione::acg_localizer(const std::string& path_i
 
 
     //GENERO FILE NECESSARI
-    std:: string comando="echo '"+PATH_TMP+"/"+basename+".key' > "+FILE_LIST_KEY;
+    std::string comando="echo '"+PATH_TMP+"/"+basename+".key' > "+FILE_LIST_KEY;
     system(comando.c_str());
    //exec("echo '$fullname_senza_estensione.sift' > $FILE_LIST_SIFT");
 
     //ACG
     comando=EXEC_ACGGEOLOCALIZER+" "+FILE_LIST_KEY+" "+PATH_RICOSTRUZIONE_OUT+" "+N_CENTROIDI+" "+PATH_CENTROIDI+" "+PATH_DESC_ASSIGN+" 0 "+PATH_TMP+"/"+basename+"_results.txt 200 1 1 0 >> "+FILE_LOG_SATTLER+" ;";
+    log+=comando+"\n\n";
     system(comando.c_str());
 
     //ACG2CAMERA
     comando=EXEC_SATTLER2CAMERA+" "+FILE_LOG_SATTLER+" "+FILE_LIST_KEY+" "+PATH_TMP;
+    log+=comando+"\n\n";
     system(comando.c_str());
 
     //CAMERA2LATLONG
     comando=EXEC_CAMERA2LATLONG+" "+FILE_CAMERA+" "+PATH_MEDIA_CAM_CENTER+" > "+FILE_COORD_FINAL;
+    log+=comando+"\n\n";
     system(comando.c_str());
 
 
@@ -233,7 +240,7 @@ std::vector<std::string> localizzazione::acg_localizer(const std::string& path_i
         }
 
     }
-    std::cout<<"Longitudine: "<<s1<<"\nLatitudine: "<<s2<<"\n";
+    log+="Longitudine: "+s1+"\nLatitudine: "+s2+"\n\n";
     std::vector<std::string> ritorno;
     ritorno.push_back(s1);
     ritorno.push_back(s2);
@@ -249,9 +256,9 @@ return r * 180/ M_PI;
 
 
 
-double localizzazione::calcola_distanza(double lat1,double lon1,double lat2,double lon2)
+double localizzazione::calcola_distanza(double lat1,double lon1,double lat2,double lon2,std::string& log)
 {
-   std::cout<<"distanza tra "<<lat1<<","<<lon2<<" e "<<lat2<<","<<lon2<<":\n";
+   log+="calcolo distanza tra "+std::to_string(lat1)+","+std::to_string(lon2)+" e "+std::to_string(lat2)+","+std::to_string(lon2)+";\n\n";
    double R = 6371; // km
    double f1 = deg2rad(lat1);
    double f2 = deg2rad(lat2);

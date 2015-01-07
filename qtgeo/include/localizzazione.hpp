@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <exception>
 #include <exiv2/exiv2.hpp>
 #include<math.h>
 #include<boost/filesystem.hpp>
@@ -21,10 +22,10 @@ class localizzazione
     public:
         localizzazione();
         void imposta_path(const std::string& PATH_RICOSTRUZIONE_OUT,const std::string&  PATH_CENTROIDI,const std::string&  PATH_MEDIA_CAM_CENTER,const std::string& PATH_DESC_ASSIGN,const std::string& N_CENTROIDI,const std::string& PATH_TMP);
-        std::string calcola_sift(const std::string&  path_img_jpg,char tipo_sift=0,std::string parametri="");
-        std::vector<std::string> acg_localizer(const std::string&  path_img_sift);
-        std::vector<std::string> localizza(const std::string&  path_img_jpg,char tipo_sift=0,std::string parametri="");
-        double calcola_distanza(double lat1,double lon1,double lat2,double lon2);
+        std::string calcola_sift(const std::string&  path_img_jpg,char tipo_sift,const std::string& parametri,std::string& log);
+        std::vector<std::string> acg_localizer(const std::string&  path_img_sift,std::string& log);
+        std::vector<std::string> localizza(const std::string&  path_img_jpg,char tipo_sift,const std::string& parametri,std::string& log);
+        double calcola_distanza(double lat1,double lon1,double lat2,double lon2,std::string& log);
 
     private:
 

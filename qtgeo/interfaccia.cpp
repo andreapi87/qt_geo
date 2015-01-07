@@ -178,6 +178,8 @@ void Dialogo::on_stima_clicked()
 {
     // qDebug()<<"Premuto stima\n";
      //std::cout<<"Se tmp non esiste la creo\n";
+     log_text_browser->append(QString("Attendere...\n\n"));
+     QApplication::processEvents();
      boost::filesystem::create_directories((tmp_input->text().toStdString()).c_str());
      localizzazione acg;
      acg.imposta_path(out_input->text().toStdString(),cluster_input->text().toStdString(),center_input->text().toStdString(),bin_input->text().toStdString(),n_centroidi_input->text().toStdString(),tmp_input->text().toStdString());
@@ -188,13 +190,14 @@ void Dialogo::on_stima_clicked()
         tipo_sift_scelto=1;
 
      std::string parametri=parametri_input->text().toStdString();
-     std::vector<std::string> coordinate=acg.localizza(nomeimmagine.toStdString(),tipo_sift_scelto,parametri);
+     std::string log;
+try
+{
+     std::vector<std::string> coordinate=acg.localizza(nomeimmagine.toStdString(),tipo_sift_scelto,parametri,log);
      std::string lon=coordinate.at(0);
      std::string lat=coordinate.at(1);
-
      setmappa(lat,lon,lat_exif,lon_exif);
-
-     double dist=acg.calcola_distanza(atof(lat.c_str()),atof(lon.c_str()),atof(lat_exif.c_str()),atof(lon_exif.c_str()));
+     double dist=acg.calcola_distanza(atof(lat.c_str()),atof(lon.c_str()),atof(lat_exif.c_str()),atof(lon_exif.c_str()),log);
      if(lat.compare("")!=0 && lat_exif.compare("")!=0)
      {
 
@@ -205,6 +208,13 @@ void Dialogo::on_stima_clicked()
      {
         distanza_etichetta->setText(QString("NA"));
      }
+}
+catch(std::exception e)
+{
+}
+
+
+     log_text_browser->append(QString(log.c_str()));
      stima->setEnabled(true);
      QApplication::restoreOverrideCursor();
 
